@@ -90,7 +90,7 @@ st.selectbox(
 
 st.date_input(
     "Date", 
-    value=None,
+    value=datetime.now().date(),
     key="date"
 )
 
