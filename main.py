@@ -12,8 +12,6 @@ def init_connection():
 
 supabase = init_connection()
 
-# if "user" not in st.session_state:
-#     st.session_state.user = 
 
 supabase.auth.sign_in_with_password(
     credentials={
@@ -34,8 +32,7 @@ def get_tools(date: datetime.date, session: Literal["1", "2"]) -> list[dict]:
     tools = supabase.table("tools").select("*").execute().data
     return [tool for tool in tools if tool["id"] not in reserved_tool_ids]
 
-def clear():
-
+def reserve():
     for tool in st.session_state.tools:
         # check if tool is already reserved
         reserved_tools = (supabase.table("history")
@@ -58,6 +55,7 @@ def clear():
             "session": st.session_state.session["value"],        
         }).execute()
 
+    # clear form
     st.session_state.teacher = None
     st.session_state.session = None
     st.session_state.date = None
@@ -104,7 +102,7 @@ if st.session_state.session and st.session_state.date:
 
 st.button(
     "Reserve", 
-    on_click=clear, 
+    on_click=reserve, 
     disabled=not (
         st.session_state.teacher and 
         st.session_state.session and
